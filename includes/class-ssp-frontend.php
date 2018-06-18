@@ -456,8 +456,12 @@ class SSP_Frontend {
 			$player_size = 'mini';
 		}
 
+		/*
 		global $largePlayerInstanceNumber;
 		$largePlayerInstanceNumber++;
+		*/
+
+		$largePlayerInstanceNumber = current_time( 'timestamp' );
 
 		$player = '';
 
