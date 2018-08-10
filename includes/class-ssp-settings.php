@@ -133,13 +133,13 @@ class SSP_Settings {
 		// If we do not have the WordPress core colour picker field, then we don't break anything
 		add_action( 'admin_footer', function () {
 			?>
-            <script>
-                jQuery(document).ready(function ($) {
-                    if ("function" === typeof $.fn.wpColorPicker) {
-                        $('.ssp-color-picker').wpColorPicker();
-                    }
-                });
-            </script>
+			<script>
+				jQuery(document).ready(function ($) {
+					if ("function" === typeof $.fn.wpColorPicker) {
+						$('.ssp-color-picker').wpColorPicker();
+					}
+				});
+			</script>
 			<?php
 		}, 99 );
 
@@ -186,7 +186,7 @@ class SSP_Settings {
 	public function show_upgrade_page() {
 		$ssp_redirect = ( isset( $_GET['ssp_redirect'] ) ? filter_var( $_GET['ssp_redirect'], FILTER_SANITIZE_STRING ) : '' );
 		$ssp_dismiss_url = add_query_arg( array( 'ssp_dismiss_upgrade' => 'dismiss', 'ssp_redirect' => rawurlencode( $ssp_redirect ) ), admin_url( 'index.php' ) );
-		include( $this->templates_dir . DIRECTORY_SEPARATOR . 'settings-upgrade-page.php' );
+		include $this->templates_dir . DIRECTORY_SEPARATOR . 'settings-upgrade-page.php';
 	}
 
 	/**
@@ -655,241 +655,277 @@ class SSP_Settings {
 			),
 		);
 
+		$general_feed_settings = array(
+			array(
+				'id'          => 'data_title',
+				'label'       => __( 'Title', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast title.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => get_bloginfo( 'name' ),
+				'placeholder' => get_bloginfo( 'name' ),
+				'class'       => 'large-text',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_subtitle',
+				'label'       => __( 'Subtitle', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast subtitle.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => get_bloginfo( 'description' ),
+				'placeholder' => get_bloginfo( 'description' ),
+				'class'       => 'large-text',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_author',
+				'label'       => __( 'Author', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast author.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => get_bloginfo( 'name' ),
+				'placeholder' => get_bloginfo( 'name' ),
+				'class'       => 'large-text',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_category',
+				'label'       => __( 'Primary Category', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast\'s primary category.', 'seriously-simple-podcasting' ),
+				'type'        => 'select',
+				'options'     => $category_options,
+				'default'     => '',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_subcategory',
+				'label'       => __( 'Primary Sub-Category', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast\'s primary sub-category (if available) - must be a sub-category of the primary category selected above.', 'seriously-simple-podcasting' ),
+				'type'        => 'select',
+				'options'     => $subcategory_options,
+				'default'     => '',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_category2',
+				'label'       => __( 'Secondary Category', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast\'s secondary category.', 'seriously-simple-podcasting' ),
+				'type'        => 'select',
+				'options'     => $category_options,
+				'default'     => '',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_subcategory2',
+				'label'       => __( 'Secondary Sub-Category', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast\'s secondary sub-category (if available) - must be a sub-category of the secondary category selected above.', 'seriously-simple-podcasting' ),
+				'type'        => 'select',
+				'options'     => $subcategory_options,
+				'default'     => '',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_category3',
+				'label'       => __( 'Tertiary Category', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast\'s tertiary category.', 'seriously-simple-podcasting' ),
+				'type'        => 'select',
+				'options'     => $category_options,
+				'default'     => '',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_subcategory3',
+				'label'       => __( 'Tertiary Sub-Category', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast\'s tertiary sub-category (if available) - must be a sub-category of the tertiary category selected above.', 'seriously-simple-podcasting' ),
+				'type'        => 'select',
+				'options'     => $subcategory_options,
+				'default'     => '',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_description',
+				'label'       => __( 'Description/Summary', 'seriously-simple-podcasting' ),
+				'description' => __( 'A description/summary of your podcast - no HTML allowed.', 'seriously-simple-podcasting' ),
+				'type'        => 'textarea',
+				'default'     => get_bloginfo( 'description' ),
+				'placeholder' => get_bloginfo( 'description' ),
+				'callback'    => 'wp_strip_all_tags',
+				'class'       => 'large-text',
+			),
+			array(
+				'id'          => 'data_image',
+				'label'       => __( 'Cover Image', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast cover image - must have a minimum size of 1400x1400 px.', 'seriously-simple-podcasting' ),
+				'type'        => 'image',
+				'default'     => '',
+				'placeholder' => '',
+				'callback'    => 'esc_url_raw',
+			),
+			array(
+				'id'          => 'data_owner_name',
+				'label'       => __( 'Owner name', 'seriously-simple-podcasting' ),
+				'description' => __( 'Podcast owner\'s name.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => get_bloginfo( 'name' ),
+				'placeholder' => get_bloginfo( 'name' ),
+				'class'       => 'large-text',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_owner_email',
+				'label'       => __( 'Owner email address', 'seriously-simple-podcasting' ),
+				'description' => __( 'Podcast owner\'s email address.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => get_bloginfo( 'admin_email' ),
+				'placeholder' => get_bloginfo( 'admin_email' ),
+				'class'       => 'large-text',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_language',
+				'label'       => __( 'Language', 'seriously-simple-podcasting' ),
+				'description' => sprintf( __( 'Your podcast\'s language in %1$sISO-639-1 format%2$s.', 'seriously-simple-podcasting' ), '<a href="' . esc_url( 'http://www.loc.gov/standards/iso639-2/php/code_list.php' ) . '" target="' . wp_strip_all_tags( '_blank' ) . '">', '</a>' ),
+				'type'        => 'text',
+				'default'     => get_bloginfo( 'language' ),
+				'placeholder' => get_bloginfo( 'language' ),
+				'class'       => 'all-options',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'data_copyright',
+				'label'       => __( 'Copyright', 'seriously-simple-podcasting' ),
+				'description' => __( 'Copyright line for your podcast.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => '&#xA9; ' . date( 'Y' ) . ' ' . get_bloginfo( 'name' ),
+				'placeholder' => '&#xA9; ' . date( 'Y' ) . ' ' . get_bloginfo( 'name' ),
+				'class'       => 'large-text',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'explicit',
+				'label'       => __( 'Explicit', 'seriously-simple-podcasting' ),
+				'description' => sprintf( __( 'To mark this podcast as an explicit podcast, check this box. Explicit content rules can be found %s.', 'seriously-simple-podcasting' ), '<a href="https://discussions.apple.com/thread/1079151">here</a>' ),
+				'type'        => 'checkbox',
+				'default'     => '',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'complete',
+				'label'       => __( 'Complete', 'seriously-simple-podcasting' ),
+				'description' => __( 'Mark if this podcast is complete or not. Only do this if no more episodes are going to be added to this feed.', 'seriously-simple-podcasting' ),
+				'type'        => 'checkbox',
+				'default'     => '',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'publish_date',
+				'label'       => __( 'Source for publish date', 'seriously-simple-podcasting' ),
+				'description' => __( 'Use the "Published date" of the post or use "Date recorded" from the Podcast episode details.', 'seriously-simple-podcasting' ),
+				'type'        => 'radio',
+				'options'     => array(
+					'published' => __( 'Published date', 'seriously-simple-podcasting' ),
+					'recorded'  => __( 'Recorded date', 'seriously-simple-podcasting' )
+				),
+				'default'     => 'published',
+			),
+		);
+
+		$spotify_feed_settings = array();
+		if ( ssp_is_connected_to_podcastmotor() ) {
+			/**
+			 * Spotify fields
+			 */
+			$spotify_feed_settings = array(
+				array(
+					'id'          => 'enable_spotify',
+					'label'       => __( 'Enable Spotify Support', 'seriously-simple-podcasting' ),
+					'description' => sprintf( __( 'Update your RSS feed to support Spotify requirements', 'seriously-simple-podcasting' ), '<a href="' . esc_url( 'https://www.seriouslysimplepodcasting.com/ios-11-podcast-tags/' ) . '" target="' . wp_strip_all_tags( '_blank' ) . '">', '</a>' ),
+					'type'        => 'checkbox',
+					'default'     => '',
+					'callback'    => 'wp_strip_all_tags',
+				),
+				array(
+					'id'          => 'country_of_origin',
+					'label'       => __( 'Country of Origin', 'seriously-simple-podcasting' ),
+					'description' => sprintf( __( 'Space separated list of %1$sISO 3166 country codes%2$s ranked in order of
+priority from most relevant to least relevant. eg us gb', 'seriously-simple-podcasting' ), '<a href="' . esc_url( 'https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2' ) . '" target="' . wp_strip_all_tags( '_blank' ) . '">', '</a>' ),
+					'type'        => 'text',
+					'default'     => '',
+					'placeholder' => __( 'us', 'seriously-simple-podcasting' ),
+					'callback'    => 'wp_strip_all_tags',
+					'class'       => 'regular-text',
+				),
+			);
+		}
+
+		/**
+		 * New iTunes Tag Announced At WWDC 2017
+		 */
+		$itunes_feed_settings = array(
+			array(
+				'id'          => 'consume_order',
+				'label'       => __( 'Show Type', 'seriously-simple-podcasting' ),
+				'description' => sprintf( __( 'The order your podcast episodes will be listed. %1$sMore details here.%2$s', 'seriously-simple-podcasting' ), '<a href="' . esc_url( 'https://www.seriouslysimplepodcasting.com/ios-11-podcast-tags/' ) . '" target="' . wp_strip_all_tags( '_blank' ) . '">', '</a>' ),
+				'type'        => 'select',
+				'options'     => array(
+					''         => __( 'Please Select', 'seriously-simple-podcasting' ),
+					'episodic' => __( 'Episodic', 'seriously-simple-podcasting' ),
+					'serial'   => __( 'Serial', 'seriously-simple-podcasting' )
+				),
+				'default'     => '',
+			),
+			array(
+				'id'          => 'redirect_feed',
+				'label'       => __( 'Redirect this feed to new URL', 'seriously-simple-podcasting' ),
+				'description' => sprintf( __( 'Redirect your feed to a new URL (specified below).', 'seriously-simple-podcasting' ), '<br/>' ),
+				'type'        => 'checkbox',
+				'default'     => '',
+				'callback'    => 'wp_strip_all_tags',
+			),
+			array(
+				'id'          => 'new_feed_url',
+				'label'       => __( 'New podcast feed URL', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast feed\'s new URL.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => '',
+				'placeholder' => __( 'New feed URL', 'seriously-simple-podcasting' ),
+				'callback'    => 'esc_url_raw',
+				'class'       => 'regular-text',
+			),
+			array(
+				'id'          => 'itunes_url',
+				'label'       => __( 'iTunes URL', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast\'s iTunes URL.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => '',
+				'placeholder' => __( 'iTunes URL', 'seriously-simple-podcasting' ),
+				'callback'    => 'esc_url_raw',
+				'class'       => 'regular-text',
+			),
+			array(
+				'id'          => 'stitcher_url',
+				'label'       => __( 'Stitcher URL', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast\'s Stitcher URL.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => '',
+				'placeholder' => __( 'Stitcher URL', 'seriously-simple-podcasting' ),
+				'callback'    => 'esc_url_raw',
+				'class'       => 'regular-text',
+			),
+			array(
+				'id'          => 'google_play_url',
+				'label'       => __( 'Google Play URL', 'seriously-simple-podcasting' ),
+				'description' => __( 'Your podcast\'s Google Play URL.', 'seriously-simple-podcasting' ),
+				'type'        => 'text',
+				'default'     => '',
+				'placeholder' => __( 'Google Play URL', 'seriously-simple-podcasting' ),
+				'callback'    => 'esc_url_raw',
+				'class'       => 'regular-text',
+			),
+		);
+
 		$settings['feed-details'] = array(
 			'title'       => __( 'Feed details', 'seriously-simple-podcasting' ),
 			'description' => sprintf( __( 'This data will be used in the feed for your podcast so your listeners will know more about it before they subscribe.%1$sAll of these fields are optional, but it is recommended that you fill in as many of them as possible. Blank fields will use the assigned defaults in the feed.%2$s', 'seriously-simple-podcasting' ), '<br/><em>', '</em>' ),
-			'fields'      => array(
-				array(
-					'id'          => 'data_title',
-					'label'       => __( 'Title', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast title.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => get_bloginfo( 'name' ),
-					'placeholder' => get_bloginfo( 'name' ),
-					'class'       => 'large-text',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_subtitle',
-					'label'       => __( 'Subtitle', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast subtitle.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => get_bloginfo( 'description' ),
-					'placeholder' => get_bloginfo( 'description' ),
-					'class'       => 'large-text',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_author',
-					'label'       => __( 'Author', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast author.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => get_bloginfo( 'name' ),
-					'placeholder' => get_bloginfo( 'name' ),
-					'class'       => 'large-text',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_category',
-					'label'       => __( 'Primary Category', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast\'s primary category.', 'seriously-simple-podcasting' ),
-					'type'        => 'select',
-					'options'     => $category_options,
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_subcategory',
-					'label'       => __( 'Primary Sub-Category', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast\'s primary sub-category (if available) - must be a sub-category of the primary category selected above.', 'seriously-simple-podcasting' ),
-					'type'        => 'select',
-					'options'     => $subcategory_options,
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_category2',
-					'label'       => __( 'Secondary Category', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast\'s secondary category.', 'seriously-simple-podcasting' ),
-					'type'        => 'select',
-					'options'     => $category_options,
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_subcategory2',
-					'label'       => __( 'Secondary Sub-Category', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast\'s secondary sub-category (if available) - must be a sub-category of the secondary category selected above.', 'seriously-simple-podcasting' ),
-					'type'        => 'select',
-					'options'     => $subcategory_options,
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_category3',
-					'label'       => __( 'Tertiary Category', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast\'s tertiary category.', 'seriously-simple-podcasting' ),
-					'type'        => 'select',
-					'options'     => $category_options,
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_subcategory3',
-					'label'       => __( 'Tertiary Sub-Category', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast\'s tertiary sub-category (if available) - must be a sub-category of the tertiary category selected above.', 'seriously-simple-podcasting' ),
-					'type'        => 'select',
-					'options'     => $subcategory_options,
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_description',
-					'label'       => __( 'Description/Summary', 'seriously-simple-podcasting' ),
-					'description' => __( 'A description/summary of your podcast - no HTML allowed.', 'seriously-simple-podcasting' ),
-					'type'        => 'textarea',
-					'default'     => get_bloginfo( 'description' ),
-					'placeholder' => get_bloginfo( 'description' ),
-					'callback'    => 'wp_strip_all_tags',
-					'class'       => 'large-text',
-				),
-				array(
-					'id'          => 'data_image',
-					'label'       => __( 'Cover Image', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast cover image - must have a minimum size of 1400x1400 px.', 'seriously-simple-podcasting' ),
-					'type'        => 'image',
-					'default'     => '',
-					'placeholder' => '',
-					'callback'    => 'esc_url_raw',
-				),
-				array(
-					'id'          => 'data_owner_name',
-					'label'       => __( 'Owner name', 'seriously-simple-podcasting' ),
-					'description' => __( 'Podcast owner\'s name.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => get_bloginfo( 'name' ),
-					'placeholder' => get_bloginfo( 'name' ),
-					'class'       => 'large-text',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_owner_email',
-					'label'       => __( 'Owner email address', 'seriously-simple-podcasting' ),
-					'description' => __( 'Podcast owner\'s email address.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => get_bloginfo( 'admin_email' ),
-					'placeholder' => get_bloginfo( 'admin_email' ),
-					'class'       => 'large-text',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_language',
-					'label'       => __( 'Language', 'seriously-simple-podcasting' ),
-					'description' => sprintf( __( 'Your podcast\'s language in %1$sISO-639-1 format%2$s.', 'seriously-simple-podcasting' ), '<a href="' . esc_url( 'http://www.loc.gov/standards/iso639-2/php/code_list.php' ) . '" target="' . wp_strip_all_tags( '_blank' ) . '">', '</a>' ),
-					'type'        => 'text',
-					'default'     => get_bloginfo( 'language' ),
-					'placeholder' => get_bloginfo( 'language' ),
-					'class'       => 'all-options',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'data_copyright',
-					'label'       => __( 'Copyright', 'seriously-simple-podcasting' ),
-					'description' => __( 'Copyright line for your podcast.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => '&#xA9; ' . date( 'Y' ) . ' ' . get_bloginfo( 'name' ),
-					'placeholder' => '&#xA9; ' . date( 'Y' ) . ' ' . get_bloginfo( 'name' ),
-					'class'       => 'large-text',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'explicit',
-					'label'       => __( 'Explicit', 'seriously-simple-podcasting' ),
-					'description' => sprintf(__( 'To mark this podcast as an explicit podcast, check this box. Explicit content rules can be found %s.', 'seriously-simple-podcasting' ), '<a href="https://discussions.apple.com/thread/1079151">here</a>'),
-					'type'        => 'checkbox',
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'complete',
-					'label'       => __( 'Complete', 'seriously-simple-podcasting' ),
-					'description' => __( 'Mark if this podcast is complete or not. Only do this if no more episodes are going to be added to this feed.', 'seriously-simple-podcasting' ),
-					'type'        => 'checkbox',
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'publish_date',
-					'label'       => __( 'Source for publish date', 'seriously-simple-podcasting' ),
-					'description' => __( 'Use the "Published date" of the post or use "Date recorded" from the Podcast episode details.', 'seriously-simple-podcasting' ),
-					'type'        => 'radio',
-					'options'     => array( 'published' => __( 'Published date', 'seriously-simple-podcasting' ), 'recorded' => __( 'Recorded date', 'seriously-simple-podcasting' ) ),
-					'default'     => 'published',
-				),
-				/**
-				 * New iTunes Tag Announced At WWDC 2017
-				 */
-				array(
-					'id'          => 'consume_order',
-					'label'       => __( 'Show Type', 'seriously-simple-podcasting' ),
-					'description' => sprintf( __( 'The order your podcast episodes will be listed. %1$sMore details here.%2$s', 'seriously-simple-podcasting' ), '<a href="' . esc_url( 'https://www.seriouslysimplepodcasting.com/ios-11-podcast-tags/' ) . '" target="' . wp_strip_all_tags( '_blank' ) . '">', '</a>' ),
-					'type'        => 'select',
-					'options'     => array(
-						''         => __( 'Please Select', 'seriously-simple-podcasting' ),
-						'episodic' => __( 'Episodic', 'seriously-simple-podcasting' ),
-						'serial'   => __( 'Serial', 'seriously-simple-podcasting' )
-					),
-					'default'     => '',
-				),
-				array(
-					'id'          => 'redirect_feed',
-					'label'       => __( 'Redirect this feed to new URL', 'seriously-simple-podcasting' ),
-					'description' => sprintf( __( 'Redirect your feed to a new URL (specified below).', 'seriously-simple-podcasting' ), '<br/>' ),
-					'type'        => 'checkbox',
-					'default'     => '',
-					'callback'    => 'wp_strip_all_tags',
-				),
-				array(
-					'id'          => 'new_feed_url',
-					'label'       => __( 'New podcast feed URL', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast feed\'s new URL.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => '',
-					'placeholder' => __( 'New feed URL', 'seriously-simple-podcasting' ),
-					'callback'    => 'esc_url_raw',
-					'class'       => 'regular-text',
-				),
-				array(
-					'id'          => 'itunes_url',
-					'label'       => __( 'iTunes URL', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast\'s iTunes URL.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => '',
-					'placeholder' => __( 'iTunes URL', 'seriously-simple-podcasting' ),
-					'callback'    => 'esc_url_raw',
-					'class'       => 'regular-text',
-				),
-				array(
-					'id'          => 'stitcher_url',
-					'label'       => __( 'Stitcher URL', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast\'s Stitcher URL.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => '',
-					'placeholder' => __( 'Stitcher URL', 'seriously-simple-podcasting' ),
-					'callback'    => 'esc_url_raw',
-					'class'       => 'regular-text',
-				),
-				array(
-					'id'          => 'google_play_url',
-					'label'       => __( 'Google Play URL', 'seriously-simple-podcasting' ),
-					'description' => __( 'Your podcast\'s Google Play URL.', 'seriously-simple-podcasting' ),
-					'type'        => 'text',
-					'default'     => '',
-					'placeholder' => __( 'Google Play URL', 'seriously-simple-podcasting' ),
-					'callback'    => 'esc_url_raw',
-					'class'       => 'regular-text',
-				),
-			),
+			'fields'      => array_merge( $general_feed_settings, $spotify_feed_settings, $itunes_feed_settings ),
 		);
 
 		$settings['security'] = array(
@@ -999,21 +1035,6 @@ class SSP_Settings {
 				),
 			),
 		);
-// @todo add back for analytics launch
-//		$settings['analytics'] = array(
-//			'title'       => __( 'Analytics', 'seriously-simple-podcasting' ),
-//			'description' => sprintf( __( 'Connect your %s analytics application with your podcast site' ), '<a target="_blank" href=" ' . SSP_PODMOTOR_APP_URL . '">Seriously Simple Hosting</a>' ),
-//			'fields'      => array(
-//				array(
-//					'id'          => 'ssp_analytics_token',
-//					'label'       => __( 'Analytics Token', 'seriously-simple-podcasting' ),
-//					'description' => '',
-//					'type'        => 'text',
-//					'callback'    => 'esc_url_raw',
-//					'class'       => 'regular-text',
-//				),
-//			),
-//		);
 
 		$settings['castos-hosting'] = array(
 			'title'       => __( 'Hosting', 'seriously-simple-podcasting' ),
