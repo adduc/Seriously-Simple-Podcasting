@@ -334,8 +334,12 @@ $itunes_type = get_option( 'ss_podcasting_consume_order' . ( $series_id > 0 ? '_
 		<?php } ?>
 		<?php if ( $new_feed_url ) { ?>
 			<itunes:new-feed-url><?php echo esc_url( $new_feed_url ); ?></itunes:new-feed-url>
+		<?php } ?>
+
+		<?php if ( ssp_is_connected_to_podcastmotor() && 'on' === get_option('ss_podcasting_enable_spotify', 'off') ) { ?>
+			<spotify:countryOfOrigin><?php echo get_option('ss_podcasting_country_of_origin', '') ?></spotify:countryOfOrigin>
 		<?php }
-		
+
 		// Prevent WP core from outputting an <image> element
 		remove_action( 'rss2_head', 'rss2_site_icon' );
 		
